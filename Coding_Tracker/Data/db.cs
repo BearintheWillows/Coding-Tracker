@@ -1,39 +1,50 @@
 ﻿using Microsoft.Data.Sqlite;
+using Coding_Tracker;
+using Serilog;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace Coding_Tracker.Data;
-internal class db
+internal class Db
 {
-    public static string ConnectionString
+
+    public Db( string connectionString )
     {
-        get
-        {
-            return System.Configuration.ConfigurationManager.ConnectionStrings["Coding_Tracker.Properties.Settings.CodingTrackerConnectionString"].ConnectionString;
-        }
+        ConnectionString = connectionString;
     }
 
-    public static void CreateDatabase()
+    private string ConnectionString { get; }
+
+    public void CreateDatabase()
     {
-        using var connection = new SqliteConnection(ConnectionString);
-        using var command = connection.CreateCommand();
+        using ( var connection = new SqliteConnection( ConnectionString ) )
+        {
+            using var command = connection.CreateCommand();
 
-        connection.Open();
+            connection.Open();
 
-        command.CommandText = @"CREATE TABLE IF NOT EXISTS CodingTracker 
+            command.CommandText = @"CREATE TABLE IF NOT EXISTS CodingTracker 
                                 (Id INTEGER PRIMARY KEY AUTOINCREMENT, 
                                  Date TEXT, 
                                  StartTime TEXT, 
                                  FinishTime TEXT,
                                  Duration TEXT
-)";
+                                 )";
 
-        try
-        {
-            command.ExecuteNonQuery();
-        }
-        catch ( Exception e )
-        {
-            Console.WriteLine.de ;
+            try
+            {
+                command.ExecuteNonQuery();
+                Log.Information( "Database created" );
+
+            }
+            catch ( Exception e )
+            {
+                Log.Information( "Database not Created", e );
+                Console.WriteLine( "Sorry, the database could not be created" );
+            }
         }
     }
-    }
+
+
 }
+
