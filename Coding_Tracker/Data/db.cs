@@ -6,10 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Coding_Tracker.Models;
 
 namespace Coding_Tracker.Data;
+
 internal class Db
 {
-
-    public Db( string connectionString )
+    public Db(string connectionString)
     {
         ConnectionString = connectionString;
     }
@@ -18,13 +18,14 @@ internal class Db
 
     public void CreateDatabase()
     {
-        using ( var connection = new SqliteConnection( ConnectionString ) )
+        using (var connection = new SqliteConnection(ConnectionString))
         {
             using var command = connection.CreateCommand();
 
             connection.Open();
 
-            command.CommandText = @"CREATE TABLE IF NOT EXISTS CodingTracker 
+            command.CommandText =
+                @"CREATE TABLE IF NOT EXISTS CodingTracker 
                                 (Id INTEGER PRIMARY KEY AUTOINCREMENT, 
                                  Date TEXT, 
                                  StartTime TEXT, 
@@ -35,21 +36,17 @@ internal class Db
             try
             {
                 command.ExecuteNonQuery();
-                Log.Information( "Database created" );
-
+                Log.Information("Database created");
             }
-            catch ( Exception e )
+            catch (Exception e)
             {
-                Log.Information( "Database not Created", e );
-                Console.WriteLine( "Sorry, the database could not be created" );
+                Log.Information("Database not Created", e);
+                Console.WriteLine("Sorry, the database could not be created");
             }
         }
     }
 
-    public void Add( DateTime date,
-                    DateTime startTime,
-                    DateTime finishTime
-                   )
+    public void Add(DateTime date, DateTime startTime, DateTime finishTime)
     {
         TimeSpan duration = finishTime - startTime;
 
@@ -57,25 +54,25 @@ internal class Db
 
         using var command = connection.CreateCommand();
 
-
         connection.Open();
 
-        command.CommandText = $@"INSERT INTO CodingTracker(date, startTime, finishTime, duration) VALUES (@date, @startTime, @finishTime, @duration)";
+        command.CommandText =
+            $@"INSERT INTO CodingTracker(Date, StartTime, FinishTime, Duration) VALUES (@date, @startTime, @finishTime, @duration)";
 
-        command.Parameters.AddWithValue( "@date", date );
-        command.Parameters.AddWithValue( "@startTime", startTime );
-        command.Parameters.AddWithValue( "@finishTime", finishTime );
-        command.Parameters.AddWithValue( "@duration", duration );
+        command.Parameters.AddWithValue("@date", date);
+        command.Parameters.AddWithValue("@startTime", startTime);
+        command.Parameters.AddWithValue("@finishTime", finishTime);
+        command.Parameters.AddWithValue("@duration", duration);
 
         try
         {
             command.ExecuteNonQuery();
-            Log.Information( "Data Inserted Successfully" );
+            Log.Information("Data Inserted Successfully");
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
-            Log.Warning( "Data not Inserted" );
-            Log.Debug( e.Message );
+            Log.Warning("Data not Inserted");
+            Log.Debug(e.Message);
         }
     }
 
@@ -93,29 +90,29 @@ internal class Db
         //Create SQLiteDataReader object
         using var reader = command.ExecuteReader();
 
-        //Create a list to store the results   
+        //Create a list to store the results
         var codingSessions = new List<CodingSession>();
 
         //Read the data and store them in the list
-        while ( reader.Read() )
+        while (reader.Read())
         {
             var codingSession = new CodingSession
             {
-                Id = reader.GetInt32( 0 ),
-                Date = reader.GetDateTime( 1 ),
-                StartTime = reader.GetDateTime( 2 ),
-                FinishTime = reader.GetDateTime( 3 ),
-                Duration = reader.GetTimeSpan( 4 )
+                Id = reader.GetInt32(0),
+                Date = reader.GetDateTime(1),
+                StartTime = reader.GetDateTime(2),
+                FinishTime = reader.GetDateTime(3),
+                Duration = reader.GetTimeSpan(4)
             };
 
-            codingSessions.Add( codingSession );
+            codingSessions.Add(codingSession);
         }
 
         return codingSessions;
-
     }
 
-    public CodingSession GetById(int id){
+    public CodingSession GetById(int id)
+    {
         using var connection = new SqliteConnection(ConnectionString);
         using var command = connection.CreateCommand();
 
@@ -125,12 +122,12 @@ internal class Db
         // Select all rows from the table
         command.CommandText = "SELECT * FROM CodingTracker WHERE Id = @id";
 
-        command.Parameters.AddWithValue( "@id", id );
-
+        command.Parameters.AddWithValue("@id", id);
+    
         //Create SQLiteDataReader object
         using var reader = command.ExecuteReader();
 
-        //Create a list to store the results   
+        //Create a list to store the results
         var codingSessions = new List<CodingSession>();
 
         //Check if reader has any rows
@@ -142,17 +139,18 @@ internal class Db
         {
             reader.Read();
 
-        var codingSession = new CodingSession
+            var codingSession = new CodingSession
             {
-                Id = reader.GetInt32( 0 ),
-                Date = reader.GetDateTime( 1 ),
-                StartTime = reader.GetDateTime( 2 ),
-                FinishTime = reader.GetDateTime( 3 ),
-                Duration = reader.GetTimeSpan( 4 )
+                Id = reader.GetInt32(0),
+                Date = reader.GetDateTime(1),
+                StartTime = reader.GetDateTime(2),
+                FinishTime = reader.GetDateTime(3),
+                Duration = reader.GetTimeSpan(4)
             };
 
             return codingSession;
-        } else
+        }
+        else
         {
             Log.Warning("No Coding Session with that Id");
             return null;
@@ -163,39 +161,39 @@ internal class Db
     {
         using var connection = new SqliteConnection(ConnectionString);
         using var command = connection.CreateCommand();
-
         // Open the connection
         connection.Open();
-
+        
         //Select from the table where Id = @id
         command.CommandText = $"SELECT * FROM CodingTracker WHERE Id = @id";
-        command.Parameters.AddWithValue( "@id", codingSession.Id );
+        command.Parameters.AddWithValue("@id", codingSession.Id);
+       
 
         SqliteDataReader reader = command.ExecuteReader();
-
+    
         if (reader.HasRows)
         {
-         reader.Close();
-            // Select all rows from the table
-        command.CommandText = "UPDATE CodingTracker SET Date = @date, StartTime = @startTime, FinishTime = @finishTime, Duration = @duration WHERE Id = @id";
+            reader.Close();
 
-        command.Parameters.AddWithValue( "@id", codingSession.Id );
-        command.Parameters.AddWithValue( "@date", codingSession.Date );
-        command.Parameters.AddWithValue( "@startTime", codingSession.StartTime );
-        command.Parameters.AddWithValue( "@finishTime", codingSession.FinishTime  );
-        command.Parameters.AddWithValue( "@duration", codingSession.Duration );
+            command.Parameters.AddWithValue("@date", codingSession.Date);
+            command.Parameters.AddWithValue("@startTime", codingSession.StartTime);
+            command.Parameters.AddWithValue("@finishTime", codingSession.FinishTime);
+            command.Parameters.AddWithValue("@duration", codingSession.Duration);
+            // Select all rows from th table
 
-        try
-        {
-            command.ExecuteNonQuery();
-            Log.Information( "Data Updated Successfully" );
+            command.CommandText = $"UPDATE CodingTracker SET Date = @date, StartTime = @startTime, FinishTime = @finishTime, Duration = @duration WHERE Id = @id";
+            try
+            {
+                command.ExecuteNonQuery();
+                Log.Information("Data Updated Successfully");
+            }
+            catch (Exception e)
+            {
+                Log.Warning("Data not Updated");
+                Log.Debug(e.Message);
+            }
         }
-        catch ( Exception e )
-        {
-            Log.Warning( "Data not Updated" );
-            Log.Debug( e.Message);
-        }
-        } else
+        else
         {
             Log.Warning("No Coding Session with that Id");
         }
