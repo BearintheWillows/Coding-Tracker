@@ -7,7 +7,7 @@ using Coding_Tracker.Models;
 
 namespace Coding_Tracker.Data;
 
-internal class Db
+public class Db
 {
     public Db(string connectionString)
     {
@@ -18,14 +18,13 @@ internal class Db
 
     public void CreateDatabase()
     {
-        using (var connection = new SqliteConnection(ConnectionString))
-        {
-            using var command = connection.CreateCommand();
+        using var connection = new SqliteConnection(ConnectionString);
+        using var command = connection.CreateCommand();
 
-            connection.Open();
+        connection.Open();
 
-            command.CommandText =
-                @"CREATE TABLE IF NOT EXISTS CodingTracker 
+        command.CommandText =
+            @"CREATE TABLE IF NOT EXISTS CodingTracker 
                                 (Id INTEGER PRIMARY KEY AUTOINCREMENT, 
                                  Date TEXT, 
                                  StartTime TEXT, 
@@ -33,16 +32,15 @@ internal class Db
                                  Duration TEXT
                                  )";
 
-            try
-            {
-                command.ExecuteNonQuery();
-                Log.Information("Database created");
-            }
-            catch (Exception e)
-            {
-                Log.Information("Database not Created", e);
-                Console.WriteLine("Sorry, the database could not be created");
-            }
+        try
+        {
+            command.ExecuteNonQuery();
+            Log.Information("Database created");
+        }
+        catch (Exception e)
+        {
+            Log.Information("Database not Created", e);
+            Console.WriteLine("Sorry, the database could not be created");
         }
     }
 
@@ -57,7 +55,7 @@ internal class Db
         connection.Open();
 
         command.CommandText =
-            $@"INSERT INTO CodingTracker(Date, StartTime, FinishTime, Duration) VALUES (@date, @startTime, @finishTime, @duration)";
+            "INSERT INTO CodingTracker(Date, StartTime, FinishTime, Duration) VALUES (@date, @startTime, @finishTime, @duration)";
 
         command.Parameters.AddWithValue("@date", date);
         command.Parameters.AddWithValue("@startTime", startTime);
@@ -111,7 +109,7 @@ internal class Db
         return codingSessions;
     }
 
-    public CodingSession GetById(int id)
+    public CodingSession? GetById(int id)
     {
         using var connection = new SqliteConnection(ConnectionString);
         using var command = connection.CreateCommand();
@@ -123,7 +121,6 @@ internal class Db
         command.CommandText = "SELECT * FROM CodingTracker WHERE Id = @id";
 
         command.Parameters.AddWithValue("@id", id);
-    
         //Create SQLiteDataReader object
         using var reader = command.ExecuteReader();
 
@@ -163,9 +160,9 @@ internal class Db
         using var command = connection.CreateCommand();
         // Open the connection
         connection.Open();
-        
+
         //Select from the table where Id = @id
-        command.CommandText = $"SELECT * FROM CodingTracker WHERE Id = @id";
+        command.CommandText = "SELECT * FROM CodingTracker WHERE Id = @id";
         command.Parameters.AddWithValue("@id", codingSession.Id);
         SqliteDataReader reader = command.ExecuteReader();
         if (reader.HasRows)
@@ -178,7 +175,7 @@ internal class Db
             command.Parameters.AddWithValue("@duration", codingSession.Duration);
             // Select all rows from th table
 
-            command.CommandText = $"UPDATE CodingTracker SET Date = @date, StartTime = @startTime, FinishTime = @finishTime, Duration = @duration WHERE Id = @id";
+            command.CommandText = "UPDATE CodingTracker SET Date = @date, StartTime = @startTime, FinishTime = @finishTime, Duration = @duration WHERE Id = @id";
             try
             {
                 command.ExecuteNonQuery();
@@ -204,14 +201,14 @@ internal class Db
         connection.Open();
 
         //Select from the table where Id = @id
-        command.CommandText = $"SELECT * FROM CodingTracker WHERE Id = @id";
+        command.CommandText = "SELECT * FROM CodingTracker WHERE Id = @id";
         command.Parameters.AddWithValue("@id", id);
         SqliteDataReader reader = command.ExecuteReader();
         if (reader.HasRows)
         {
             reader.Close();
-        
-            command.CommandText = $"DELETE FROM CodingTracker WHERE Id = @id";
+
+            command.CommandText = "DELETE FROM CodingTracker WHERE Id = @id";
             try
             {
                 command.ExecuteNonQuery();
