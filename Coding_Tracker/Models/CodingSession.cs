@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Coding_Tracker.Models;
-internal class CodingSession
+public class CodingSession
 {
     public int Id { get; set; }
     public DateTime Date { get; set; }
