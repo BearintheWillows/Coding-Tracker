@@ -167,10 +167,7 @@ internal class Db
         //Select from the table where Id = @id
         command.CommandText = $"SELECT * FROM CodingTracker WHERE Id = @id";
         command.Parameters.AddWithValue("@id", codingSession.Id);
-       
-
         SqliteDataReader reader = command.ExecuteReader();
-    
         if (reader.HasRows)
         {
             reader.Close();
@@ -190,6 +187,39 @@ internal class Db
             catch (Exception e)
             {
                 Log.Warning("Data not Updated");
+                Log.Debug(e.Message);
+            }
+        }
+        else
+        {
+            Log.Warning("No Coding Session with that Id");
+        }
+    }
+
+    public void DeleteById(int id)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        using var command = connection.CreateCommand();
+        // Open the connection
+        connection.Open();
+
+        //Select from the table where Id = @id
+        command.CommandText = $"SELECT * FROM CodingTracker WHERE Id = @id";
+        command.Parameters.AddWithValue("@id", id);
+        SqliteDataReader reader = command.ExecuteReader();
+        if (reader.HasRows)
+        {
+            reader.Close();
+        
+            command.CommandText = $"DELETE FROM CodingTracker WHERE Id = @id";
+            try
+            {
+                command.ExecuteNonQuery();
+                Log.Information("Data Deleted Successfully");
+            }
+            catch (Exception e)
+            {
+                Log.Warning("Data not Deleted");
                 Log.Debug(e.Message);
             }
         }
