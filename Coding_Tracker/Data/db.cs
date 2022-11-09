@@ -158,4 +158,46 @@ internal class Db
             return null;
         }
     }
+
+    public void Update(CodingSession codingSession)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        using var command = connection.CreateCommand();
+
+        // Open the connection
+        connection.Open();
+
+        //Select from the table where Id = @id
+        command.CommandText = $"SELECT * FROM CodingTracker WHERE Id = @id";
+        command.Parameters.AddWithValue( "@id", codingSession.Id );
+
+        SqliteDataReader reader = command.ExecuteReader();
+
+        if (reader.HasRows)
+        {
+         reader.Close();
+            // Select all rows from the table
+        command.CommandText = "UPDATE CodingTracker SET Date = @date, StartTime = @startTime, FinishTime = @finishTime, Duration = @duration WHERE Id = @id";
+
+        command.Parameters.AddWithValue( "@id", codingSession.Id );
+        command.Parameters.AddWithValue( "@date", codingSession.Date );
+        command.Parameters.AddWithValue( "@startTime", codingSession.StartTime );
+        command.Parameters.AddWithValue( "@finishTime", codingSession.FinishTime  );
+        command.Parameters.AddWithValue( "@duration", codingSession.Duration );
+
+        try
+        {
+            command.ExecuteNonQuery();
+            Log.Information( "Data Updated Successfully" );
+        }
+        catch ( Exception e )
+        {
+            Log.Warning( "Data not Updated" );
+            Log.Debug( e.Message);
+        }
+        } else
+        {
+            Log.Warning("No Coding Session with that Id");
+        }
+    }
 }
