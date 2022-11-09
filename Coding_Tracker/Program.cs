@@ -1,8 +1,7 @@
 ﻿using Coding_Tracker.Data;
-using Coding_Tracker.Models;
 using Microsoft.Extensions.Configuration;
 using Serilog;
-using System.Configuration;
+using Coding_Tracker;
 
 
 // Configure Serilog
@@ -21,11 +20,7 @@ var config = new ConfigurationBuilder()
 var connectionString = config.GetConnectionString("DefaultConnection");
 
 var db = new Db( connectionString );
+var display = new Display(db);
 
 db.CreateDatabase();
-db.Add( new DateTime( 2021, 10, 10 ), new DateTime( 2021, 10, 10, 10, 0, 0 ), new DateTime( 2021, 10, 10, 11, 0, 0 ) );
-var cs = db.GetById(1);
-cs.Duration = new TimeSpan(3, 23, 0);
-
-
-db.Update( cs );
+display.Menu();
