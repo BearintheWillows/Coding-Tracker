@@ -2,7 +2,7 @@
   "profiles": {
     "Coding_Tracker": {
       "commandName": "Project",
-      "workingDirectory": "C:\\Users\\SJWil\\source\\repos\\BearintheWillows\\Coding_Tracker\\Coding_Tracker\\Coding_Tracker.csproj"
+      "workingDirectory": "C:\\Users\\SJWil\\source\\repos\\BearintheWillows\\Coding_Tracker\\Coding_Tracker\\"
     }
   }
 }
