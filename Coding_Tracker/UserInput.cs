@@ -16,13 +16,19 @@ namespace Coding_Tracker
             AnsiConsole.Markup("[bold]Please enter a date: [/]");
             string date = Console.ReadLine();
 
-            while (!Validation.DateValidation(date))
-            {
+            bool isDateValid = Validation.DateValidation(date);
+
+             if (!isDateValid)
+             {
                 AnsiConsole.MarkupLine("[red]Please try again: [/]");
                 GetDateInput();
-            }
-            Date = DateTime.Parse(date);
+             }
+             else
+             {
+                Date = DateTime.Parse(date);
+             }
         }
+
 
         public void GetTimeInput(ValidationType validationType)
         {
@@ -32,27 +38,35 @@ namespace Coding_Tracker
                     AnsiConsole.Markup("[bold]Please enter a start time: [/]");
                     string startTime = Console.ReadLine();
 
-                    while (!Validation.TimeValidation(null,Date,ValidationType.StartTime, startTime))
+                    if (!Validation.TimeValidation(null, Date, validationType, startTime))
                     {
                         AnsiConsole.MarkupLine("[red]Please try again: [/]");
-                        GetTimeInput(ValidationType.StartTime);
+                        GetTimeInput(validationType);
                     }
-                    StartTime = TimeSpan.Parse(startTime);
+                    else
+                    {
+                        StartTime = TimeSpan.Parse(startTime);
+                    }
                     break;
                 case ValidationType.FinishTime:
                     AnsiConsole.Markup("[bold]Please enter a finish time: [/]");
                     string finishTime = Console.ReadLine();
 
-                    // Check if Finish Time is valid
-                    while (!Validation.TimeValidation(StartTime,Date, ValidationType.FinishTime, finishTime))
+                    if (true)
                     {
-                        AnsiConsole.MarkupLine("[red]Please try again: [/]");
-                        GetTimeInput(ValidationType.FinishTime);
+                        if (!Validation.TimeValidation(StartTime, Date, validationType, finishTime))
+                        {
+                            AnsiConsole.MarkupLine("[red]Please try again: [/]");
+                            GetTimeInput(validationType);
+                        }
+                        else
+                        {
+                            FinishTime = TimeSpan.Parse(finishTime);
+                        }
                     }
-                    FinishTime = TimeSpan.Parse(finishTime);
-
                     break;
             }
+            return;
         }
     }
 }
