@@ -48,6 +48,14 @@ void RunProgram()
                 AnsiConsole.WriteLine();
                 Display.TableAllSessions(SessionController.ViewAllSessions(db));
                 break;
+            case "View a session":
+                AnsiConsole.Clear();
+                AnsiConsole.MarkupLine("[bold blue underline]Select a session[/]");
+                AnsiConsole.WriteLine();
+                UserInput userInput = new();
+                userInput.GetIdInput();
+                SessionController.ViewSessionById(db, userInput.Id);
+                break;
         }
     }
 }

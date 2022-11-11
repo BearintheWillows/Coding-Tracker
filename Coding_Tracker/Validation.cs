@@ -47,6 +47,16 @@ namespace Coding_Tracker
             return true;
         }
 
+        internal static bool IdValidation(string? idInput)
+        {
+            if (idInput == null || !int.TryParse(idInput, out _))
+            {
+                AnsiConsole.MarkupLine("[red]Please enter a valid ID[/]");
+                return false;
+            }
+            return true;
+        }
+
         internal static bool TimeValidation(
             TimeSpan? startTime,
             DateTime? date,

@@ -11,6 +11,8 @@ namespace Coding_Tracker
         public DateTime Date;
         public TimeSpan StartTime;
         public TimeSpan FinishTime;
+
+        public int Id;
         public void GetDateInput()
         {
             AnsiConsole.Markup("[bold]Please enter a date: [/]");
@@ -66,7 +68,21 @@ namespace Coding_Tracker
                     }
                     break;
             }
-            return;
+        }
+
+        internal void GetIdInput()
+        {
+            AnsiConsole.MarkupLine("[bold blue]Enter the ID of the session you want to select[/]");
+            string idInput = Console.ReadLine();
+            bool isIdValid = Validation.IdValidation(idInput);
+            if (isIdValid)
+            {
+                Id = int.Parse(idInput);
+            }
+            else
+            {
+                GetIdInput();
+            }
         }
     }
 }

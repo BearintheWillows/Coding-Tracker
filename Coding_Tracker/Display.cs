@@ -49,7 +49,7 @@ namespace Coding_Tracker
                     {
                         "Add a new session",
                         "View all sessions",
-                        "Select a session",
+                        "View a session",
                         "Delete a session",
                         "Update a session",
                         "Exit"
