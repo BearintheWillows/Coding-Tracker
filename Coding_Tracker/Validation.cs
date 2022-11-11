@@ -55,6 +55,7 @@ namespace Coding_Tracker
         )
         {
             TimeSpan ParsedTime = new();
+            Regex timeFormat = new Regex("^[0-9]{2}\\:[0-9]{2}$");
 
             try
             {
@@ -66,27 +67,37 @@ namespace Coding_Tracker
                 Log.Warning(e, "Invalid Time Format");
             }
 
-            switch (validationType)
+            if (timeFormat.IsMatch(time))
             {
-                case ValidationType.StartTime:
-                    if (date == DateTime.Today)
-                    {
-                        if (ParsedTime > TimeSpan.Parse(DateTime.Now.ToLongTimeString()))
+                switch (validationType)
+                {
+                    case ValidationType.StartTime:
+                        if (date == DateTime.Today)
                         {
-                            AnsiConsole.MarkupLine("[red]Start time must be in the past[/]");
+                            if (ParsedTime > TimeSpan.Parse(DateTime.Now.ToLongTimeString()))
+                            {
+                                AnsiConsole.MarkupLine("[red]Start time must be in the past[/]");
+                                return false;
+                            }
+                        }
+                        break;
+                    case ValidationType.FinishTime:
+                        if (ParsedTime < startTime)
+                        {
+                            AnsiConsole.MarkupLine("[red]Finish time must be after start time[/]");
                             return false;
                         }
-                    }
-                    break;
-                case ValidationType.FinishTime:
-                    if (ParsedTime < startTime)
-                    {
-                        AnsiConsole.MarkupLine("[red]Finish time must be after start time[/]");
-                        return false;
-                    }
-                    break;
+                        break;
+                }
+                return true;
             }
-            return true;
+            else
+            {
+                AnsiConsole.MarkupLine(
+                    "[red]Invalid time format. Please enter time in the format hh:mm[/]"
+                );
+                return false;
+            }
         }
     }
 }
