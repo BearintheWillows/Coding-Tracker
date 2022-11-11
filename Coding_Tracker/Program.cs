@@ -44,13 +44,15 @@ void RunProgram()
                 break;
             case "View all sessions":
                 AnsiConsole.Clear();
-                AnsiConsole.MarkupLine("[bold blue underline]View all sessions[/]");
+                var ruleViewAll = new Rule("[bold blue underline]View all sessions[/]");
+                AnsiConsole.Write(ruleViewAll);
                 AnsiConsole.WriteLine();
                 Display.TableAllSessions(SessionController.ViewAllSessions(db));
                 break;
             case "View a session":
                 AnsiConsole.Clear();
-                AnsiConsole.MarkupLine("[bold blue underline]Select a session[/]");
+                var ruleView = new Rule("[bold blue]View a Session[/]");
+                AnsiConsole.Write(ruleView);
                 AnsiConsole.WriteLine();
                 UserInput userInput = new();
                 userInput.GetIdInput();
@@ -58,7 +60,8 @@ void RunProgram()
                 break;
             case "Update a session":
                 AnsiConsole.Clear();
-                AnsiConsole.MarkupLine("[bold blue underline]Update a session[/]");
+                var ruleUpdate = new Rule("[bold blue underline]Update a session[/]");
+                AnsiConsole.Write(ruleUpdate);
                 AnsiConsole.WriteLine();
                 UserInput updateInput = new();
                 updateInput.GetIdInput();
@@ -67,6 +70,17 @@ void RunProgram()
                 updateInput.GetTimeInput(ValidationType.FinishTime);
                 SessionController.UpdateSession(db, updateInput.Id, updateInput);
                 break;
+            case "Delete a session":
+                AnsiConsole.Clear();
+                var ruleDelete = new Rule("[bold blue]Delete a session[/]");
+                AnsiConsole.Write(ruleDelete);
+                AnsiConsole.WriteLine();
+                UserInput deleteInput = new();
+                deleteInput.GetIdInput();
+                SessionController.DeleteSession(db, deleteInput.Id);
+                break;
+            case "Exit":
+            break;
         }
     }
 }

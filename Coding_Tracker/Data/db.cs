@@ -193,7 +193,7 @@ public class Db
         }
     }
 
-    public void DeleteById(int id)
+    public bool DeleteById(int id)
     {
         using var connection = new SqliteConnection(ConnectionString);
         using var command = connection.CreateCommand();
@@ -218,11 +218,14 @@ public class Db
             {
                 Log.Warning("Data not Deleted");
                 Log.Debug(e.Message);
+                return false;
             }
         }
         else
         {
             Log.Warning("No Coding Session with that Id");
+            return false;
         }
+        return true;
     }
 }

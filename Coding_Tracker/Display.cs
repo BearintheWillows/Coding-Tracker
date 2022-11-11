@@ -37,6 +37,10 @@ namespace Coding_Tracker
             }
 
             AnsiConsole.Write(table);
+            var rule = new Rule("[bold green]Success! Press any key to return to the menu[/]");
+                AnsiConsole.Write(rule);
+                Console.ReadKey();
+                Console.Clear();
         }
         public static string Menu()
         {
