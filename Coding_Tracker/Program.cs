@@ -42,6 +42,12 @@ void RunProgram()
                 input.GetTimeInput(ValidationType.FinishTime);
                 SessionController.AddSession(db, input);
                 break;
+            case "View all sessions":
+                AnsiConsole.Clear();
+                AnsiConsole.MarkupLine("[bold blue underline]View all sessions[/]");
+                AnsiConsole.WriteLine();
+                Display.TableAllSessions(SessionController.ViewAllSessions(db));
+                break;
         }
     }
 }

@@ -1,9 +1,5 @@
-using System.Globalization;
 using Coding_Tracker.Models;
 using Spectre.Console;
-using Coding_Tracker.Controllers;
-using Coding_Tracker.Data;
-using System.Text.RegularExpressions;
 
 namespace Coding_Tracker
 {
@@ -62,7 +58,7 @@ namespace Coding_Tracker
         }
 
     
-        public static void ValidationError(InputType type)
+        public static void ValidationError()
         {
             AnsiConsole.MarkupLine("[red]Invalid date format. Please enter date in the format dd/mm/yyyy[/]");
 
