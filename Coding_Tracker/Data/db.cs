@@ -44,7 +44,7 @@ public class Db
         }
     }
 
-    public void Add(DateTime date, DateTime startTime, DateTime finishTime)
+    public void Add(DateTime date, TimeSpan startTime, TimeSpan finishTime)
     {
         TimeSpan duration = finishTime - startTime;
 
