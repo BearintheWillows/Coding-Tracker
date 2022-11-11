@@ -21,17 +21,17 @@ namespace Coding_Tracker
                 {
                     table.AddRow($"[black on grey82]{item.Id}[/]",
                                  $"[black on grey82]{item.Date.ToString("dd/MM/yyyy")}[/]",
-                                 $"[black on grey82]{item.StartTime.ToString("HH:mm")}[/]",
-                                 $"[black on grey82]{item.FinishTime.ToString("HH:mm")}[/]",
-                                 $"[black on grey82]{item.Duration.ToString(@"hh\:mm")}[/]");
+                                 $"[black on grey82]{item.StartTime.ToString()}[/]",
+                                 $"[black on grey82]{item.FinishTime.ToString()}[/]",
+                                 $"[black on grey82]{item.Duration.ToString()}[/]");
                 }
                 else
                 {
                     table.AddRow(item.Id.ToString(),
                     item.Date.ToString("dd/MM/yyyy"),
-                    item.StartTime.ToString("HH:mm"),
-                    item.FinishTime.ToString("HH:mm"),
-                    item.Duration.ToString(@"hh\:mm"));
+                    item.StartTime.ToString(),
+                    item.FinishTime.ToString(),
+                    item.Duration.ToString());
                 }
                 rowNum++;
             }
@@ -40,9 +40,10 @@ namespace Coding_Tracker
         }
         public static string Menu()
         {
+            var rule = new Rule("[bold blue]Menu[/]");
+            AnsiConsole.Write(rule);
             var menu = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("Menu")
                     .PageSize(10)
                     .HighlightStyle(Style.Parse("blue"))
                     .AddChoices(new List<string>
@@ -50,8 +51,8 @@ namespace Coding_Tracker
                         "Add a new session",
                         "View all sessions",
                         "View a session",
-                        "Delete a session",
                         "Update a session",
+                        "Delete a session",
                         "Exit"
                     }));
             return menu;

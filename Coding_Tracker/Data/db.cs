@@ -98,8 +98,8 @@ public class Db
             {
                 Id = reader.GetInt32(0),
                 Date = reader.GetDateTime(1),
-                StartTime = reader.GetDateTime(2),
-                FinishTime = reader.GetDateTime(3),
+                StartTime = reader.GetTimeSpan(2),
+                FinishTime = reader.GetTimeSpan(3),
                 Duration = reader.GetTimeSpan(4)
             };
 
@@ -140,8 +140,8 @@ public class Db
             {
                 Id = reader.GetInt32(0),
                 Date = reader.GetDateTime(1),
-                StartTime = reader.GetDateTime(2),
-                FinishTime = reader.GetDateTime(3),
+                StartTime = reader.GetTimeSpan(2),
+                FinishTime = reader.GetTimeSpan(3),
                 Duration = reader.GetTimeSpan(4)
             };
 

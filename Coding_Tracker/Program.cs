@@ -56,6 +56,17 @@ void RunProgram()
                 userInput.GetIdInput();
                 SessionController.ViewSessionById(db, userInput.Id);
                 break;
+            case "Update a session":
+                AnsiConsole.Clear();
+                AnsiConsole.MarkupLine("[bold blue underline]Update a session[/]");
+                AnsiConsole.WriteLine();
+                UserInput updateInput = new();
+                updateInput.GetIdInput();
+                updateInput.GetDateInput();
+                updateInput.GetTimeInput(ValidationType.StartTime);
+                updateInput.GetTimeInput(ValidationType.FinishTime);
+                SessionController.UpdateSession(db, updateInput.Id, updateInput);
+                break;
         }
     }
 }
