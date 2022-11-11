@@ -1,22 +1,15 @@
-using System.Net.Mime;
-using System.Transactions;
-using System.Linq;
-using System.Collections.Generic;
+using System.Globalization;
 using Coding_Tracker.Models;
 using Spectre.Console;
 using Coding_Tracker.Controllers;
 using Coding_Tracker.Data;
+using System.Text.RegularExpressions;
 
 namespace Coding_Tracker
 {
-    public  class Display
+    public static class Display
     {
-        private readonly Db _db;
-        public Display(Db db)
-        {
-            _db = db;
-        }
-        public void TableAllSessions(List<CodingSession> sessions)
+        public static void TableAllSessions(List<CodingSession> sessions)
         {
             var table = new Table();
             var rowNum = 1;
@@ -49,12 +42,9 @@ namespace Coding_Tracker
 
             AnsiConsole.Write(table);
         }
-        public void Menu()
+        public static string Menu()
         {
-            string menu = string.Empty;
-            while (menu != "Exit")
-            {
-            menu = AnsiConsole.Prompt(
+            var menu = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Menu")
                     .PageSize(10)
@@ -68,55 +58,34 @@ namespace Coding_Tracker
                         "Update a session",
                         "Exit"
                     }));
-
-                if (menu == "Add a new session")
-                {
-                    AddSessionPrompt();
-                }
-                else if (menu == "View all sessions")
-                {
-                    TableAllSessions(SessionController.GetSessions(_db));
-                }
-                else if (menu == "Select a session")
-                {
-                    // TODO: Select a session
-                }
-                else if (menu == "Delete a session")
-                {
-                    // TODO: Delete a session
-                }
-                else if (menu == "Update a session")
-                {
-                    // TODO: Update a session
-                }
-                else if (menu == "Exit")
-                {
-                    AnsiConsole.MarkupLine("[red]Goodbye![/]");
-                }
-            }
+            return menu;
         }
 
-        public void AddSessionPrompt()
+    
+        public static void ValidationError(InputType type)
         {
-            var date = AnsiConsole.Prompt(
-                new TextPrompt<DateTime>("Date")
-                    .Validate(date => date.Date <= DateTime.Now.Date, "Date must be in the past")
-                    .Validate(date => date.Date >= DateTime.Now.Date.AddDays(-7), "Date must be within the last 7 days")
-                    .InvalidChoiceMessage("[red]Invalid date[/]"));
+            AnsiConsole.MarkupLine("[red]Invalid date format. Please enter date in the format dd/mm/yyyy[/]");
 
-            DateTime startTime = AnsiConsole.Prompt(
-                new TextPrompt<DateTime>("Start Time")
-                    .Validate(time => time.TimeOfDay <= DateTime.Now.TimeOfDay, "Time must be in the past")
-                    .InvalidChoiceMessage("[red]Invalid time[/]"));
+        }
+        public static void AddSessionPrompt()
+        {
+        
+            // DateTime startTime = AnsiConsole.Prompt(
+            //     new TextPrompt<DateTime>("Start Time")
+            //         .Validate(time => time.TimeOfDay >= DateTime.Now.TimeOfDay, "Time must be in the past")
+            //         .Validate(time => DateTime.TryParseExact(time.ToShortTimeString(), "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out time), "Time must be in the format HH:mm")
+            //         .InvalidChoiceMessage("[red]Invalid start time[/]"));
 
-            DateTime finishTime = AnsiConsole.Prompt(
-                new TextPrompt<DateTime>("Finish Time")
-                    .Validate(time => time.TimeOfDay <= DateTime.Now.TimeOfDay, "Time must be in the past")
-                    .InvalidChoiceMessage("[red]Invalid time[/]"));
+            // DateTime finishTime = AnsiConsole.Prompt(
+            //     new TextPrompt<DateTime>("Finish Time")
+            //         .Validate(time => time.TimeOfDay <= DateTime.Now.TimeOfDay, "Time must be in the past")
+            //         .Validate(time => time > startTime, "Finish time must be after start time")
+            //         .Validate(time => DateTime.TryParseExact(time.ToShortTimeString(), "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out time), "Time must be in the format HH:mm")
+            //         .InvalidChoiceMessage("[red]Invalid finish time[/]"));
 
-            var duration = finishTime - startTime;
+            // var duration = finishTime - startTime;
 
-            _db.Add(date, startTime, finishTime);
+            // _db.Add(DateTime.Parse(date), startTime, finishTime);
         }
     }
 }
