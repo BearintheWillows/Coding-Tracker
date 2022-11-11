@@ -15,7 +15,7 @@ Console App using:
 
   
 
-- (x) Same base requirements as [[Habit_Tracker]]. Log time instead of quanitity.
+- [x] Same base requirements as [[Habit_Tracker]]. Log time instead of quanitity.
 - (x) Use a NuGet package to display data to console
 - (x) Use seperate class files
 - (x) Ensure correct Date format is used
