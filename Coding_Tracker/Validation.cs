@@ -28,7 +28,9 @@ namespace Coding_Tracker
 
             if (!dateFormat.IsMatch(date))
             {
-                AnsiConsole.MarkupLine("[red]Invalid date format. Please enter date in the format dd/mm/yyyy[/]");
+                AnsiConsole.MarkupLine(
+                    "[red]Invalid date format. Please enter date in the format dd/mm/yyyy[/]"
+                );
                 return false;
             }
             if (ParsedDate.Date > DateTime.Today)
@@ -42,6 +44,48 @@ namespace Coding_Tracker
                 return false;
             }
 
+            return true;
+        }
+
+        internal static bool TimeValidation(
+            TimeSpan? startTime,
+            DateTime? date,
+            ValidationType validationType,
+            string? time
+        )
+        {
+            TimeSpan ParsedTime = new();
+
+            try
+            {
+                _ = TimeSpan.TryParse(time, out ParsedTime);
+            }
+            catch (Exception e)
+            {
+                AnsiConsole.MarkupLine("[red]Not a Date. Please try again.[/]");
+                Log.Warning(e, "Invalid Time Format");
+            }
+
+            switch (validationType)
+            {
+                case ValidationType.StartTime:
+                    if (date == DateTime.Today)
+                    {
+                        if (ParsedTime > TimeSpan.Parse(DateTime.Now.ToLongTimeString()))
+                        {
+                            AnsiConsole.MarkupLine("[red]Start time must be in the past[/]");
+                            return false;
+                        }
+                    }
+                    break;
+                case ValidationType.FinishTime:
+                    if (ParsedTime < startTime)
+                    {
+                        AnsiConsole.MarkupLine("[red]Finish time must be after start time[/]");
+                        return false;
+                    }
+                    break;
+            }
             return true;
         }
     }
